@@ -4,13 +4,6 @@ set -e
 
 REPOSITORY_NAME=$(basename "${GITHUB_REPOSITORY}")
 
-if [[ ! -z "${INPUT_PASSWORD}" ]]; then
-  echo "::warning ::Running this GitHub Action without authentication token is NOT recommended!"
-  SONAR_PASSWORD="${INPUT_PASSWORD}"
-else
-  SONAR_PASSWORD=""
-fi
-
 if [[ -f "${INPUT_PROJECTBASEDIR%/}/pom.xml" ]]; then
   echo "::error file=${INPUT_PROJECTBASEDIR%/}/pom.xml::Maven project detected. You should run the goal 'org.sonarsource.scanner.maven:sonar' during build rather than using this GitHub Action."
   exit 1
@@ -33,13 +26,11 @@ if [[ ! -f "${INPUT_PROJECTBASEDIR%/}/sonar-project.properties" ]]; then
     -Dsonar.projectName="${SONAR_PROJECTNAME}" \
     -Dsonar.projectVersion="${SONAR_PROJECTVERSION}" \
     -Dsonar.projectBaseDir="${INPUT_PROJECTBASEDIR}" \
-    -Dsonar.login="${INPUT_LOGIN}" \
-    -Dsonar.password="${SONAR_PASSWORD}" \
+    -Dsonar.token="${INPUT_LOGIN}" \
     -Dsonar.sources="${INPUT_PROJECTBASEDIR}" \
     -Dsonar.sourceEncoding="${INPUT_ENCODING}"
 else
   sonar-scanner \
     -Dsonar.host.url="${INPUT_HOST}" \
-    -Dsonar.login="${INPUT_LOGIN}" \
-    -Dsonar.password="${SONAR_PASSWORD}"
+    -Dsonar.token="${INPUT_LOGIN}" \
 fi
