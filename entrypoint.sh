@@ -31,6 +31,7 @@ if [[ ! -f "${INPUT_PROJECTBASEDIR%/}/sonar-project.properties" ]]; then
     -Dsonar.sourceEncoding="${INPUT_ENCODING}"
 else
   sonar-scanner \
+    -Dsonar.projectKey="${INPUT_PROJECTKEY}" \
     -Dsonar.host.url="${INPUT_HOST}" \
     -Dsonar.token="${INPUT_LOGIN}"
 fi
